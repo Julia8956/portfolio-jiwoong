@@ -348,13 +348,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import sgMail from '@sendgrid/mail';
-// import HelloWorld from "./components/HelloWorld.vue";
 
 export default Vue.extend({
 	name: 'App',
-	components: {
-		// HelloWorld
-	},
+	// components: {
+	// },
 	data: () => ({
 		SENDGRID_API_KEY:
 			'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',
