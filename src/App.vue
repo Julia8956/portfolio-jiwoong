@@ -51,7 +51,7 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<v-main>
+		<v-main style="overflow-x: hidden">
 			<v-btn
 				:color="primaryColor"
 				raised
@@ -65,8 +65,8 @@
 			>
 				<v-icon>mdi-arrow-up</v-icon>
 			</v-btn>
-			<section id="hero">
-				<v-row class="pa-10" no-gutters>
+			<section id="hero" style="overflow-x: hidden">
+				<v-row class="pa-5 pa-sm-10" no-gutters>
 					<v-col
 						v-if="$vuetify.breakpoint.smAndUp"
 						cols="12"
@@ -131,7 +131,7 @@
 				</v-row>
 			</section>
 
-			<section id="about">
+			<section id="about" style="overflow-x: hidden">
 				<div class="py-12"></div>
 
 				<v-container class="text-center">
@@ -152,7 +152,7 @@
 						university(Choongbuk National Unv., South Korea). Currently I am
 						working in Quality Control team of OB Beer Company(family of AB
 						InBev.). My team and I work for the best quality of beer in the
-						world. I like playing soccer when I am free
+						world. I like playing soccer when I am free.
 					</v-responsive>
 
 					<v-avatar class="elevation-12 mb-12" size="128">
@@ -171,7 +171,7 @@
 				<div class="py-12"></div>
 			</section>
 
-			<section id="skills" class="grey lighten-3">
+			<section id="skills" class="grey lighten-3" style="overflow-x: hidden">
 				<div class="py-12"></div>
 
 				<v-container class="text-center">
@@ -214,7 +214,7 @@
 				<div class="py-12"></div>
 			</section>
 
-			<section id="experience">
+			<section id="experiences" style="overflow-x: hidden">
 				<div class="py-12"></div>
 
 				<v-container>
@@ -258,7 +258,14 @@
 				<div class="py-12"></div>
 			</section>
 
-			<v-sheet id="contact" color="#333333" dark tag="section" tile>
+			<v-sheet
+				id="contact"
+				color="#333333"
+				dark
+				tag="section"
+				tile
+				style="overflow-x: hidden"
+			>
 				<div class="py-12"></div>
 
 				<v-container>
@@ -435,7 +442,7 @@ export default Vue.extend({
 	background: #021254
 	.img-area
 		position: relative
-		padding: 50px
+		// padding: 50px
 		.img-wrapper
 			transform: rotate(-25deg)
 			transition: 1.5s all ease-out
@@ -447,7 +454,7 @@ export default Vue.extend({
 		left: 0
 		color: white
 		width: 100%
-		padding: 50px
+		padding: 10px 10px 70px 10px
 		z-index: 1
 		left: 0
 
