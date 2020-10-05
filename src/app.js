@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
-app.post('/mail', async (req, res) => {
+app.get('/mail', async (req, res) => {
 	try {
 		const transporter = nodeMailer.createTransport({
 			host: 'smtp.gmail.com',

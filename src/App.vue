@@ -451,7 +451,7 @@ export default Vue.extend({
 				this.email.subject = `[${this.emailSender}님이 포트폴리오에서 보내신 메일] ${this.email.subject}`;
 				this.isSending = true;
 				await axios({
-					method: 'post',
+					method: 'get',
 					url: '/mail',
 					data: {
 						...this.email,
