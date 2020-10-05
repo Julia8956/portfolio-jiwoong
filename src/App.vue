@@ -291,7 +291,7 @@
 						<v-row>
 							<v-col cols="12">
 								<v-text-field
-									v-model="emailSender"
+									v-model="email.from_name"
 									flat
 									label="Name*"
 									solo
@@ -374,9 +374,9 @@
 	</v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
-import axios from 'axios';
+import emailjs from 'emailjs-com';
 
 export default Vue.extend({
 	name: 'App',
@@ -426,11 +426,12 @@ export default Vue.extend({
 			},
 		],
 		email: {
+			// eslint-disable-next-line @typescript-eslint/camelcase
+			from_name: '',
 			from: '',
 			subject: '',
 			text: '',
 		},
-		emailSender: '',
 	}),
 
 	mounted() {
@@ -445,17 +446,13 @@ export default Vue.extend({
 	methods: {
 		async sendMail() {
 			try {
-				this.email.subject = `[${this.emailSender}님이 포트폴리오에서 보내신 메일] ${this.email.subject}`;
-				this.email.text = `from: ${this.email.from} \n${this.email.text}`;
 				this.isSending = true;
-				const result = await axios({
-					method: 'get',
-					url: '/mail',
-					data: {
-						...this.email,
-					},
-				});
-				console.log(result);
+				emailjs.init('user_EY3wMYdJlCccjMlPkZuEV');
+				await emailjs.send(
+					'gmail_testing_service',
+					'template_eki39t9',
+					this.email,
+				);
 				this.emailSent = true;
 				this.snackbar = true;
 			} catch (err) {
@@ -468,11 +465,12 @@ export default Vue.extend({
 		},
 		resetEmail() {
 			this.email = {
+				// eslint-disable-next-line @typescript-eslint/camelcase
+				from_name: '',
 				from: '',
 				subject: '',
 				text: '',
 			};
-			this.emailSender = '';
 		},
 	},
 });
