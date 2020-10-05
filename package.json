@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@sendgrid/mail": "^7.2.6",
+    "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
+    "nodemailer": "^6.4.13",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.2",

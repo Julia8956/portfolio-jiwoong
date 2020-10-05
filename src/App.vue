@@ -66,7 +66,7 @@
 				<v-icon>mdi-arrow-up</v-icon>
 			</v-btn>
 			<section id="hero" style="overflow-x: hidden">
-				<v-row class="pa-5 pa-sm-10" no-gutters>
+				<v-row class="pa-5 pa-sm-10" no-gutters style="overflow: hidden">
 					<v-col
 						v-if="$vuetify.breakpoint.smAndUp"
 						cols="12"
@@ -145,14 +145,16 @@
 
 					<v-responsive
 						class="mx-auto title font-weight-light mb-8"
-						max-width="720"
+						max-width="800"
 					>
-						Hi, I'm Jiwoong(Alex) Kim. I studied
-						<strong class="amber--text">MicroBiology</strong> back in my
-						university(Choongbuk National Unv., South Korea). Currently I am
-						working in Quality Control team of OB Beer Company(family of AB
-						InBev.). My team and I work for the best quality of beer in the
-						world. I like playing soccer when I am free.
+						Hi, I'm Jiwoong(Alex) Kim.<br />
+						I studied <strong class="amber--text">MicroBiology</strong> back in
+						my university(Choongbuk National Unv., South Korea).<br />
+						Currently I am working in Quality Control team of OB Beer
+						Company(family of AB InBev.).<br />
+						Based on my knowledge in Microbioloy,<br />
+						I work for the best quality of beer in the world.<br />
+						I like playing soccer when I am free.
 					</v-responsive>
 
 					<v-avatar class="elevation-12 mb-12" size="128">
@@ -266,6 +268,10 @@
 				tile
 				style="overflow-x: hidden"
 			>
+				<!-- <v-parallax
+					:height="$vuetify.breakpoint.smAndDown ? 1300 : 800"
+					src="./assets/with-beers.png"
+				> -->
 				<div class="py-12"></div>
 
 				<v-container>
@@ -294,7 +300,7 @@
 
 							<v-col cols="12">
 								<v-text-field
-									v-model="email.to"
+									v-model="email.from"
 									flat
 									label="Email*"
 									solo
@@ -320,8 +326,18 @@
 							</v-col>
 
 							<v-col class="mx-auto" cols="auto">
-								<v-btn color="accent" x-large @click="sendMail">
-									Submit
+								<v-btn
+									:color="isSending ? 'grey lighten-2' : 'accent'"
+									x-large
+									@click="sendMail()"
+								>
+									<v-progress-circular
+										v-if="isSending"
+										:size="50"
+										:color="primaryColor"
+										indeterminate
+									></v-progress-circular>
+									<span v-else>Submit</span>
 								</v-btn>
 							</v-col>
 						</v-row>
@@ -329,13 +345,19 @@
 				</v-container>
 
 				<div class="py-12"></div>
+				<!-- </v-parallax> -->
 			</v-sheet>
 
-			<v-snackbar v-model="snackbar" timeout="2000">
-				{{ '발송되었습니다.' }}
+			<v-snackbar
+				v-model="snackbar"
+				timeout="5000"
+				:color="emailSent ? 'amber' : 'red'"
+				dark
+			>
+				{{ emailSent ? '발송되었습니다.' : '메일 발송 실패...!' }}
 				<v-icon></v-icon>
 				<template v-slot:action="{ attrs }">
-					<v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+					<v-btn text v-bind="attrs" @click="snackbar = false">
 						Close
 					</v-btn>
 				</template>
@@ -354,20 +376,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import sgMail from '@sendgrid/mail';
+import axios from 'axios';
+// import sendMail from './utils/mail.js';
 
 export default Vue.extend({
 	name: 'App',
 	// components: {
 	// },
 	data: () => ({
-		SENDGRID_API_KEY:
-			'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',
 		isInit: false,
 		primaryColor: '#021254',
 		drawer: false,
 		group: null,
 		snackbar: false,
+		emailSent: false,
+		isSending: false,
 		features: [
 			{
 				icon: 'mdi-account-tie-voice',
@@ -392,7 +415,7 @@ export default Vue.extend({
 		experiences: [
 			{
 				title:
-					'Work in Quality Control Team of OB Beer Compompay(subsidiary of AB InBev.)',
+					'Work in Quality Control Team of OB Beer Company(subsidiary of AB InBev.)',
 				subtitle: '2019.06 ~ (Now)',
 			},
 			{
@@ -406,16 +429,15 @@ export default Vue.extend({
 			},
 		],
 		email: {
-			to: '',
-			from: 'minji6654@gmail.com',
+			from: '',
 			subject: '',
 			text: '',
 		},
 		emailSender: '',
 	}),
+
 	mounted() {
 		this.isInit = true;
-		sgMail.setApiKey(this.SENDGRID_API_KEY);
 	},
 	watch: {
 		group() {
@@ -424,10 +446,52 @@ export default Vue.extend({
 	},
 
 	methods: {
-		sendMail() {
-			this.email.subject = `[${this.emailSender}님이 보내신 메일] ${this.email.subject}`;
-			sgMail.send(this.email);
-			this.snackbar = true;
+		async sendMail() {
+			try {
+				this.email.subject = `[${this.emailSender}님이 포트폴리오에서 보내신 메일] ${this.email.subject}`;
+				this.isSending = true;
+				await axios({
+					method: 'post',
+					url: '/mail',
+					data: {
+						...this.email,
+					},
+				});
+				// const transporter = this.createTransporter();
+				// transporter.sendMail(this.email, (err: any, response: any) => {
+				// 	if (err) {
+				// 		throw new Error(err);
+				// 	}
+				// });
+				// sendMail(this.email);
+				this.emailSent = true;
+				this.snackbar = true;
+			} catch (err) {
+				console.log(err);
+				this.emailSent = false;
+				this.snackbar = true;
+			}
+			this.isSending = false;
+			this.resetEmail();
+		},
+		// createTransporter() {
+		// 	return nodeMailer.createTransport({
+		// 		host: 'smtp.gmail.com',
+		// 		port: 465,
+		// 		secure: true,
+		// 		auth: {
+		// 			user: 'julia.testing.acc@gmail.com',
+		// 			pass: 'alswl8956',
+		// 		},
+		// 	});
+		// },
+		resetEmail() {
+			this.email = {
+				from: '',
+				subject: '',
+				text: '',
+			};
+			this.emailSender = '';
 		},
 	},
 });
@@ -445,7 +509,7 @@ export default Vue.extend({
 		// padding: 50px
 		.img-wrapper
 			transform: rotate(-25deg)
-			transition: 1.5s all ease-out
+			transition: 0.8s all ease-out
 			.main-img
 				transform: rotate(25deg)
 	.mobile-text-area
@@ -462,10 +526,10 @@ export default Vue.extend({
 	opacity: 0
 	transform: translateY(50%)
 .slideY-fade-enter-active
-	transition: all 1.5s ease-out
+	transition: all 0.8s ease-out
 .slideY-fade-reverse-enter
 	opacity: 0
 	transform: translateY(-50%)
 .slideY-fade-reverse-enter-active
-	transition: all 1.5s ease-out
+	transition: all 0.8s ease-out
 </style>
