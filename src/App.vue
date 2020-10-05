@@ -348,12 +348,7 @@
 				<!-- </v-parallax> -->
 			</v-sheet>
 
-			<v-snackbar
-				v-model="snackbar"
-				timeout="5000"
-				:color="emailSent ? 'amber' : 'red'"
-				dark
-			>
+			<v-snackbar v-model="snackbar" :color="emailSent ? 'amber' : 'red'" dark>
 				{{ emailSent ? '발송되었습니다.' : '메일 발송 실패...!' }}
 				<v-icon></v-icon>
 				<template v-slot:action="{ attrs }">
@@ -374,7 +369,7 @@
 	</v-app>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from 'vue';
 import emailjs from 'emailjs-com';
 
@@ -447,10 +442,10 @@ export default Vue.extend({
 		async sendMail() {
 			try {
 				this.isSending = true;
-				emailjs.init('user_EY3wMYdJlCccjMlPkZuEV');
+				emailjs.init(process.env.VUE_APP_MAIL_USER_ID);
 				await emailjs.send(
-					'gmail_testing_service',
-					'template_eki39t9',
+					process.env.VUE_APP_MAIL_SERVICE_ID,
+					process.env.VUE_APP_MAIL_TEMPLATE_ID,
 					this.email,
 				);
 				this.emailSent = true;
