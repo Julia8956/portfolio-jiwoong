@@ -377,12 +377,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import axios from 'axios';
-// import sendMail from './utils/mail.js';
 
 export default Vue.extend({
 	name: 'App',
-	// components: {
-	// },
 	data: () => ({
 		isInit: false,
 		primaryColor: '#021254',
@@ -449,21 +446,16 @@ export default Vue.extend({
 		async sendMail() {
 			try {
 				this.email.subject = `[${this.emailSender}님이 포트폴리오에서 보내신 메일] ${this.email.subject}`;
+				this.email.text = `from: ${this.email.from} \n${this.email.text}`;
 				this.isSending = true;
-				await axios({
+				const result = await axios({
 					method: 'get',
 					url: '/mail',
 					data: {
 						...this.email,
 					},
 				});
-				// const transporter = this.createTransporter();
-				// transporter.sendMail(this.email, (err: any, response: any) => {
-				// 	if (err) {
-				// 		throw new Error(err);
-				// 	}
-				// });
-				// sendMail(this.email);
+				console.log(result);
 				this.emailSent = true;
 				this.snackbar = true;
 			} catch (err) {
@@ -474,17 +466,6 @@ export default Vue.extend({
 			this.isSending = false;
 			this.resetEmail();
 		},
-		// createTransporter() {
-		// 	return nodeMailer.createTransport({
-		// 		host: 'smtp.gmail.com',
-		// 		port: 465,
-		// 		secure: true,
-		// 		auth: {
-		// 			user: 'julia.testing.acc@gmail.com',
-		// 			pass: 'alswl8956',
-		// 		},
-		// 	});
-		// },
 		resetEmail() {
 			this.email = {
 				from: '',

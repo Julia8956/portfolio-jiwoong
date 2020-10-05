@@ -27,7 +27,7 @@ app.get('/mail', async (req, res) => {
 			if (err) {
 				throw new Error(err);
 			}
-			res.send();
+			res.send(response);
 		});
 	} catch (err) {
 		console.log(err);
